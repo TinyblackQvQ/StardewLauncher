@@ -1,0 +1,8 @@
+active: true
+buildUponDefaultConfig: true # Ensure default rules are also run
+
+# Configure your custom rule set
+NoRecompositionRules: # This ID must match the `ruleSetId` in your CustomRuleSetProvider
+  active: true
+  NoDirectRecompositionUsage: # This ID must match the `id` in your Rule's Issue
+    active: true

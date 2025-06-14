@@ -1,0 +1,89 @@
+general:
+  title: "StardewLauncher"
+
+  menu:
+    launch: "Launch"
+    packageManager: "ModPack"
+    download: "Download"
+    settings: "Settings"
+
+  popups:
+    confirm: "Confirm"
+    cancel: "Cancel"
+
+ui:
+  packageManager:
+    title: "ModPacks"
+    subTitle: "Check all your modpacks here"
+    popups:
+      create:
+        title: "Create ModPack"
+        input:
+          name:
+            label: "Name"
+            placeholder: "ModPack Name"
+          description:
+            label: "Description"
+            placeholder: "ModPack Description"
+          gameVersion:
+            label: "GameVersion"
+          apiVersion:
+            label: "ApiVersion"
+      delete:
+        title: "Delete ModPack"
+      copy:
+        title: "Create ModPack copy"
+        input:
+          copyConfig:
+            label: "Copy Mod configurations at the same time"
+          copySave:
+            label: "Copy Saves at the same time"
+      install:
+        title: "Install ModPack from File"
+        input:
+          file:
+            label: "Select File"
+          useModPackConfig:
+            label: "Use settled mod configurations in modpack at the same time"
+      export:
+        title: "Export ModPack to File"
+        input:
+          file:
+            label: "Select File"
+          attachConfigs:
+            label: "Attach mod configurations"
+
+
+modpack:
+  import:
+    importingMods: "Now importing mods..."
+    importingMod: "Now importing mods: {name} ({current}/{total})"
+    importingSaves: "Now importing saves..."
+    alreadyExists: "Mod already exists: {name}_{version}"
+    completed: "Import completed with success"
+    failed: "Import failed: {message}"
+    invalidSourceDirectory: "Invalid source directory: {path}"
+    manifestNotFound: "Manifest file not found: {path}"
+    modAlreadyInstalled: "Mod already installed: {name}"
+    success: "Import success: {name}"
+    invalidZipFile: "Invalid zip file: {path}"
+    unsupportedZipFormat: "Unsupported zip format: {file}"
+    failedToExtract: "Failed to extract zip: {error}"
+
+settings:
+  general:
+    appLanguage:
+      title: "Language"
+      desc: "The app language"
+    colorMode:
+      title: "Theme Color Mode"
+      desc: "You can change the application's theme color mode here, if you select System, it will follow your system theme color mode (if possible)"
+    gameDirectory:
+      title: "Game Directory"
+      desc: "The game root directory"
+    isAppFirstLaunch:
+      title: "IsAppFirstLaunch"
+      desc: "To check whether if the app is first launch"
+    modLibraryDirectory:
+      title: "Mod Library"
+      desc: "The mods library directory"

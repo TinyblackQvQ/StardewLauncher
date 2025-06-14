@@ -1,0 +1,88 @@
+general:
+  title: "StardewLauncher" # keep it for now, because I handle names hard
+
+  menu:
+    launch: "启动"
+    packageManager: "包管理"
+    download: "下载"
+    settings: "设置"
+
+  popups:
+    confirm: "确认"
+    cancel: "取消"
+
+ui:
+  packageManager:
+    title: "模组包"
+    subTitle: "在此处查看所有模组包"
+    popups:
+      create:
+        title: "创建模组包"
+        input:
+          name:
+            label: "名称"
+            placeholder: "模组包名称"
+          description:
+            label: "描述"
+            placeholder: "模组包描述"
+          gameVersion:
+            label: "游戏版本"
+          apiVersion:
+            label: "API版本"
+      delete:
+        title: "删除模组包"
+      copy:
+        title: "创建模组包副本"
+        input:
+          copyConfig:
+            label: "同时复制模组配置"
+          copySave:
+            label: "同时复制存档"
+      install:
+        title: "从文件安装模组包"
+        input:
+          file:
+            label: "选择文件"
+          useModPackConfig:
+            label: "同时使用模组包中的模组配置"
+      export:
+        title: "导出模组包到文件"
+        input:
+          file:
+            label: "选择文件"
+          attachConfigs:
+            label: "附加模组配置"
+
+modpack:
+  import:
+    importingMods: "正在导入模组..."
+    importingMod: "正在导入模组: {name} ({current}/{total})"
+    importingSaves: "正在导入存档..."
+    alreadyExists: "模组已存在: {name}_{version}"
+    completed: "导入完成"
+    failed: "导入失败: {message}"
+    invalidSourceDirectory: "无效的源目录: {path}"
+    manifestNotFound: "未找到清单文件: {path}"
+    modAlreadyInstalled: "模组已安装: {name}"
+    success: "导入成功: {name}"
+    invalidZipFile: "无效的zip文件: {path}"
+    unsupportedZipFormat: "不支持的zip格式: {file}"
+    failedToExtract: "解压zip失败: {error}"
+
+settings:
+  general:
+    appLanguage:
+      title: "语言"
+      desc: "应用程序语言"
+    colorMode:
+      title: "主题颜色模式"
+      desc: "您可以在此处更改应用程序的主题颜色模式，如果选择系统，它将跟随您的系统主题颜色模式（如果可能）"
+    gameDirectory:
+      title: "游戏目录"
+      desc: "游戏根目录"
+    isAppFirstLaunch:
+      title: "首次启动"
+      desc: "检查应用程序是否首次启动"
+    modLibraryDirectory:
+      title: "模组库"
+      desc: "模组库目录"

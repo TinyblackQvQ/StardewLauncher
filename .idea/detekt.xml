@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DetektPluginSettings">
+    <option name="configurationFiles">
+      <list>
+        <option value="$PROJECT_DIR$/config/detekt/custom.yml" />
+        <option value="$PROJECT_DIR$/config/detekt/detekt.yml" />
+      </list>
+    </option>
+    <option name="enableDetekt" value="true" />
+    <option name="pluginJars">
+      <list>
+        <option value="$PROJECT_DIR$/DetektCustomRules/build/libs/detekt-custom-rules-1.0.jar" />
+      </list>
+    </option>
+  </component>
+</project>
