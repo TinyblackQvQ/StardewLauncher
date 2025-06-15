@@ -66,7 +66,7 @@ fun AppPage(gameDefaults: IGameDefaults = koinInject()) {
                     gameVersion = gameDefaults.getCurrentGameVersion() ?: SemanticVersion(0, 0, 0),
                     apiVersion = gameDefaults.getCurrentSMAPIVersion() ?: SemanticVersion(0, 0, 0),
                 ).toObservable()
-                ModResourceView.modPacks.add(defaultModPack)
+                ModResourceView.addModPack(defaultModPack)
                 ModResourceView.saveModPackDataToDisk(defaultModPack.toSerializable())
                 ModResourceView.copySaveFiles(ModResourceView.installedMods)
                 ModResourceView.copySaveFiles(defaultModPack)

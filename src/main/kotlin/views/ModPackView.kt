@@ -57,9 +57,11 @@ object ModResourceView {
 
     /**
      * Store data of all available mods
-     *
-     * so its name is fixed, apiVersion/gameVersion is useless, all mods in it should be enabled
-     * */
+     * 
+     * This is essentially a special ModPack that contains all available mods.
+     * Its name is fixed, apiVersion/gameVersion is not used, and all mods in it should be enabled.
+     * It will be automatically loaded from disk when the application starts.
+     */
     var installedMods =
         ObservableModPack(
             "root", "the index of all available mods", SemanticVersion(0, 0, 0),
@@ -69,7 +71,10 @@ object ModResourceView {
 
     /**
      * Store all modpacks' data
-     * */
+     * 
+     * This collection holds all the modpacks that the user has created or imported.
+     * Each modpack can have its own set of mods with specific versions.
+     */
     val modPacks = SnapshotStateList<ObservableModPack>()
 
     private val _taskProgress = MutableStateFlow(0f)
@@ -119,14 +124,23 @@ object ModResourceView {
     }
 
     /**
-     * Get mod instance from installed mods
+     * Add or Update mod pack data from given instance
      *
-     * 从已安装的所有mod中获取实例
+     * 添加或更新给定实例的模组包数据
+     * @param modPack mod pack instance 模组包实例
+     * @param overwrite whether to overwrite existing data (default: false) 当存在数据时是否覆盖
      * */
-    fun getModInstanceByInfo(uniqueID: String, version: SemanticVersion) =
-        installedMods.mods.firstOrNull { mod ->
-            mod.manifest.uniqueID == uniqueID && mod.manifest.version == version
+    fun addModPack(modPack: ObservableModPack, overwrite: Boolean = false) {
+        modPacks.indexOfFirst { it.name == modPack.name }.let { index ->
+            if (index != -1) {
+                if (overwrite) {
+                    modPacks[index] = modPack
+                }
+            } else {
+                modPacks.add(modPack)
+            }
         }
+    }
 
     /**
      * Get modpack instance from loaded modpacks

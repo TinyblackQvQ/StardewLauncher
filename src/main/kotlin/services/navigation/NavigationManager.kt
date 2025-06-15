@@ -40,6 +40,9 @@ enum class TabsDirection {
 
 /**
  * 标签页设置
+ * 
+ * @param direction 标签页方向
+ * @param options 可选的导航目标列表
  */
 @Stable
 data class TabsSettings(
@@ -49,6 +52,10 @@ data class TabsSettings(
 
 /**
  * 导航目标
+ * 
+ * @param id 唯一标识符
+ * @param type 目标类型（页面、弹窗、抽屉）
+ * @param content 可组合内容
  */
 @Stable
 data class NavigationTarget(
