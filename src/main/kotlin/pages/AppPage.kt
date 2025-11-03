@@ -23,7 +23,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -50,7 +49,6 @@ import views.ModResourceView
 @Preview
 fun AppPage(gameDefaults: IGameDefaults = koinInject()) {
     val strings = I18nManager.currentStrings.collectAsState().value
-    val currentColorScheme = ThemeManager.currentColorScheme.collectAsState().value
     val currentSeedColor = ThemeManager.currentSeedColor.collectAsState().value
     val currentThemeMode = ThemeManager.currentThemeMode.collectAsState().value
     val coroutineScope = rememberCoroutineScope()
@@ -61,61 +59,50 @@ fun AppPage(gameDefaults: IGameDefaults = koinInject()) {
             ?.let { dir ->
                 results = ModResourceView.importModFromFolderRecursively(dir)
                 val defaultModPack = ModResourceView.installedMods.toSerializable().deepCopy(
-                    name = "default",
+                    name = "Default",
                     desc = "Contains all mods you imported from your game",
                     gameVersion = gameDefaults.getCurrentGameVersion() ?: SemanticVersion(0, 0, 0),
                     apiVersion = gameDefaults.getCurrentSMAPIVersion() ?: SemanticVersion(0, 0, 0),
                 ).toObservable()
+                defaultModPack.mods.forEach { it.enabled = true }
                 ModResourceView.addModPack(defaultModPack)
                 ModResourceView.saveModPackDataToDisk(defaultModPack.toSerializable())
                 ModResourceView.copySaveFiles(ModResourceView.installedMods)
                 ModResourceView.copySaveFiles(defaultModPack)
-                AppConfig.general.lastSelectedModPackName.write("default")
+                AppConfig.general.lastSelectedModPackName.write("Default")
             }
         return results
     }
+
     val progress = ModResourceView.taskProgress.collectAsState().value
     val status = ModResourceView.taskStatus.collectAsState()
     val result = remember { mutableListOf<ModImportResult>() }
-
-    MaterialTheme(colorScheme = currentColorScheme) {
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            item {
-                ConfigOptionComponent(AppConfig.general.gameDirectory)
-                ProgressBar(progress = progress)
-                Text(status.value)
-                Button(onClick = {
-                    coroutineScope.launch {
-                        result.clear()
-                        withContext(Dispatchers.IO) {
-                            importMods().let {
-                                it?.let { elements ->
-                                    result.addAll(elements)
-                                }
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        item {
+            ConfigOptionComponent(AppConfig.general.gameDirectory)
+            ProgressBar(progress = progress)
+            Text(status.value)
+            Button(onClick = {
+                coroutineScope.launch {
+                    result.clear()
+                    withContext(Dispatchers.IO) {
+                        importMods().let {
+                            it?.let { elements ->
+                                result.addAll(elements)
                             }
                         }
                     }
-                }) {
-                    Text("Import Data")
                 }
-                result.forEach { Text("${it.status.name}: ${it.message}", modifier = Modifier.fillMaxWidth()) }
+            }) {
+                Text("Import Data")
             }
+            result.forEach { Text("${it.status.name}: ${it.message}", modifier = Modifier.fillMaxWidth()) }
         }
     }
 }
-//                val linearGradientBrush = Brush.linearGradient(
-//                    colors = listOf(Color.Red, Color.Blue, Color.Green),
-//                    start = androidx.compose.ui.geometry.Offset.Zero,
-//                    end = androidx.compose.ui.geometry.Offset.Infinite
-//                )
-//
-//                Text(
-//                    text = "Hello Gradient Text!",
-//                    style = TextStyle(fontSize = 50.sp, brush = linearGradientBrush)
-//                )

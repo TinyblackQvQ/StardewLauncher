@@ -13,6 +13,7 @@ class ObservableModDependency(
     isRequired: Boolean = true
 ) {
     private val innerUniqueID = mutableStateOf(uniqueID)
+    @PropertyNoDirectRecomposition
     private val innerMinimumVersion = mutableStateOf(minimumVersion)
     private val innerIsRequired = mutableStateOf(isRequired)
 

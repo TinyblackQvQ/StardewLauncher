@@ -14,6 +14,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -22,8 +23,9 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.WindowPlacement
 import androidx.compose.ui.window.WindowState
+import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
-import services.config.AppConfig
+import pages.general.MainTabsController
 import services.navigation.NavigationDestinations
 import services.navigation.NavigationManager
 import services.resources.color.ThemeManager
@@ -36,102 +38,104 @@ import services.window.WindowManager
 @Preview
 fun AppTopBar(windowState: WindowState, exitApp: () -> Unit, navigationManager: NavigationManager = koinInject()) {
     val strings = I18nManager.currentStrings.collectAsState().value
-    val colors = ThemeManager.currentColorScheme.collectAsState().value
     val windowStateManager: WindowManager = koinInject<WindowManager>()
     val isWindowMaximized = windowStateManager.isWindowMaximized.collectAsState()
     val themeMode = ThemeManager.currentThemeMode.collectAsState().value
+    val coroutineScope = rememberCoroutineScope()
 
-    MaterialTheme(colorScheme = colors) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(1f)
-                .height(50.dp)
-                .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.3f))
-                // 拖拽手势
-                .pointerInput(Unit) {
-                    detectDragGestures(
-                        onDragStart = { windowStateManager.onTopAppBarDragStart() },
-                        onDragEnd = { windowStateManager.onTopAppBarDragStop() },
-                        onDrag = { change, dragAmount -> windowStateManager.onTopAppBarDragging() }
-                    )
-                }
-                // 双击手势
-                .pointerInput(Unit) {
-                    detectTapGestures(
-                        onDoubleTap = {
-                            // 切换全屏/最大化状态
-                            if (isWindowMaximized.value) {
-                                windowStateManager.setPlacement(WindowPlacement.Floating)
-                            } else {
-                                windowStateManager.setPlacement(WindowPlacement.Maximized)
-                            }
-                        }
-                    )
-                },
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            // 标题
-            Text(
-                text = strings.general.title,
-                modifier = Modifier.padding(start = 12.dp),
-                color =
-                    if (themeMode == ThemeMode.DARK) MaterialTheme.colorScheme.onPrimaryContainer
-                    else MaterialTheme.colorScheme.onPrimary,
-                style = MaterialTheme.typography.titleSmall
-            )
-            // 菜单栏
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center,
-                modifier = Modifier.weight(1f)
-            ) {
-                AppMenu(icon = Icons.Default.PlayArrow, content = strings.general.menu.launch) {
-                    navigationManager.navigateTo(
-                        NavigationDestinations.Launch
-                    )
-                }
-                AppMenu(icon = Icons.Default.Inbox, content = strings.general.menu.packageManager) {
-                    navigationManager.navigateTo(
-                        NavigationDestinations.PackageManage
-                    )
-                }
-                AppMenu(icon = Icons.Default.Download, content = strings.general.menu.download) {
-                    navigationManager.navigateTo(
-                        NavigationDestinations.Download
-                    )
-                }
-                AppMenu(icon = Icons.Default.Settings, content = strings.general.menu.settings) {
-                    navigationManager.navigateTo(
-                        NavigationDestinations.Settings
-                    )
-                }
+    Row(
+        modifier = Modifier
+            .fillMaxWidth(1f)
+            .height(50.dp)
+            .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.3f))
+            // 拖拽手势
+            .pointerInput(Unit) {
+                detectDragGestures(
+                    onDragStart = { windowStateManager.onTopAppBarDragStart() },
+                    onDragEnd = { windowStateManager.onTopAppBarDragStop() },
+                    onDrag = { change, dragAmount -> windowStateManager.onTopAppBarDragging() }
+                )
             }
-            // Window Controller
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxHeight(1f)
-            ) {
-                AppWindowControllerButton(
-                    icon = Icons.Default.Minimize,
-                    desc = "Minimize App",
-                    onClick = {
-                        windowStateManager.setMinimized()
+            // 双击手势
+            .pointerInput(Unit) {
+                detectTapGestures(
+                    onDoubleTap = {
+                        // 切换全屏/最大化状态
+                        if (isWindowMaximized.value) {
+                            windowStateManager.setPlacement(WindowPlacement.Floating)
+                        } else {
+                            windowStateManager.setPlacement(WindowPlacement.Maximized)
+                        }
                     }
                 )
-                if (!isWindowMaximized.value)
-                    AppWindowControllerButton(
-                        icon = Icons.Default.Fullscreen,
-                        desc = "Switch Fullscreen",
-                        onClick = { windowStateManager.setPlacement(WindowPlacement.Maximized) }
-                    )
-                else
-                    AppWindowControllerButton(
-                        icon = Icons.Default.FullscreenExit,
-                        desc = "Switch Fullscreen",
-                        onClick = { windowStateManager.setPlacement(WindowPlacement.Floating) }
-                    )
-                AppWindowControllerButton(icon = Icons.Default.Close, desc = "Close App", onClick = exitApp)
+            },
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        // 标题
+        Text(
+            text = strings.general.title,
+            modifier = Modifier.padding(start = 12.dp),
+            color =
+                if (themeMode == ThemeMode.DARK) MaterialTheme.colorScheme.onPrimaryContainer
+                else MaterialTheme.colorScheme.onPrimary,
+            style = MaterialTheme.typography.titleSmall
+        )
+        // 菜单栏
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center,
+            modifier = Modifier.weight(1f)
+        ) {
+            suspend fun navigateToTabsPage(pageIndex: Int) {
+                navigationManager.seekBackTo(NavigationDestinations.MainTabs)
+                MainTabsController.state?.animateScrollToPage(pageIndex)
             }
+            AppMenu(icon = Icons.Default.PlayArrow, content = strings.general.menu.launch) {
+                coroutineScope.launch {
+                    navigateToTabsPage(0)
+                }
+            }
+            AppMenu(icon = Icons.Default.Inbox, content = strings.general.menu.packageManager) {
+                coroutineScope.launch {
+                    navigateToTabsPage(1)
+                }
+            }
+            AppMenu(icon = Icons.Default.Download, content = strings.general.menu.download) {
+                coroutineScope.launch {
+                    navigateToTabsPage(2)
+                }
+            }
+            AppMenu(icon = Icons.Default.Settings, content = strings.general.menu.settings) {
+                coroutineScope.launch {
+                    navigateToTabsPage(3)
+                }
+            }
+        }
+        // Window Controller
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxHeight(1f)
+        ) {
+            AppWindowControllerButton(
+                icon = Icons.Default.Minimize,
+                desc = "Minimize App",
+                onClick = {
+                    windowStateManager.setMinimized()
+                }
+            )
+            if (!isWindowMaximized.value)
+                AppWindowControllerButton(
+                    icon = Icons.Default.Fullscreen,
+                    desc = "Switch Fullscreen",
+                    onClick = { windowStateManager.setPlacement(WindowPlacement.Maximized) }
+                )
+            else
+                AppWindowControllerButton(
+                    icon = Icons.Default.FullscreenExit,
+                    desc = "Switch Fullscreen",
+                    onClick = { windowStateManager.setPlacement(WindowPlacement.Floating) }
+                )
+            AppWindowControllerButton(icon = Icons.Default.Close, desc = "Close App", onClick = exitApp)
         }
     }
 }

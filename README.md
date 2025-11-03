@@ -1,17 +1,22 @@
 ## StardewLauncher ☕
 
-*StardewLauncher is a custom mod manager & launcher with [SMAPI](https://github.com/Pathoschild/SMAPI) for Stardew Valley on Desktop.* 🕶️
+*StardewLauncher is a custom mod manager & launcher with [SMAPI](https://github.com/Pathoschild/SMAPI) for Stardew
+Valley on Desktop.* 🕶️
 
 It's developed
-based [Kotlin Multiplatform](https://www.jetbrains.com.cn/en-us/help/kotlin-multiplatform-dev/get-started.html) and
-design of [Material Design 3](https://m3.material.io/).
+based on [Kotlin Multiplatform](https://www.jetbrains.com.cn/en-us/help/kotlin-multiplatform-dev/get-started.html) with
+the design of [Material Design 3](https://m3.material.io/).
 
 > You can read this README with another language:
 > English | [中文（简体）](https://github.com/TinyblackQvQ/StardewLauncher/tree/dev/docs/README.zh_cn.md)
 
 ## Features ✨
 
-- On development
+- Easy management of mods, auto-process dependencies for every enable / disable switch.
+
+- Easy version updating, keep your configs for every update.
+
+- Individual saves & configs separation would give you a different experience for every adventure.
 
 ## Develop Roadmap 📖
 
@@ -26,13 +31,13 @@ Suitable ideas will be added to the roadmap.
 | In app game launch                          | ❌      | -                 | High     |
 | ModPack Import / Export                     | ❌      | -                 | High     |
 | ModPack Configuration Customization         | ❌      | -                 | Medium   |
-| ModPack Saves Separation                    | ✅      | not released      | -        |
+| ModPack Saves Separation                    | ✅      | not released      | High     |
 | ModPack Saves Live Backup                   | ❌      | -                 | Medium   |
 | Mod update check                            | ❌      | -                 | High     |
 | Mod download support for Nexus Mods         | ❌      | -                 | High     |
-| Mod download support for Stardrop           | ❌      | -                 | Medium   |
+| Mod download support for ModDrop            | ❌      | -                 | Medium   |
 | Mod download support for CurseForge         | ❌      | -                 | High     |
-| Mod download support for Chucklefish        | ❌      | -                 | Low      |
+| Mod download support for ChuckleFish        | ❌      | -                 | Low      |
 | Mod download support for Github             | ❌      | -                 | Low      |
 | i18n files download & install               | ❌      | -                 | Medium   |
 | Local editor for i18n file                  | ❌      | -                 | Low      |

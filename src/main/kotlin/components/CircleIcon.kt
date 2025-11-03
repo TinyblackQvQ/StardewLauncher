@@ -37,7 +37,7 @@ fun CircleIcon(
     iconScale: Float = 1f,
     imageVector: ImageVector,
     contentDescription: String = "",
-    tint: Color? = null
+    tint: Color? = MaterialTheme.colorScheme.primary
 ) {
     val colorScheme = ThemeManager.currentColorScheme.collectAsState().value
     // use 1.414f to calculate the outlined square border length of the Icon Circle

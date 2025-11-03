@@ -22,7 +22,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import kotlinx.coroutines.delay
 import models.mod.observable.ObservableModPack
-import models.mod.serializable.ModPack
 import org.koin.compose.koinInject
 import pages.AppPage
 import services.config.AppConfig

@@ -4,6 +4,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import annotations.PropertyNoDirectRecomposition
 import models.common.SemanticVersion
 import models.mod.serializable.ModContentPack
 import models.mod.serializable.ModDependency
@@ -27,22 +28,28 @@ class ObservableModManifest(
     // 创建可观察的属性
     val innerName = mutableStateOf(name)
     val innerAuthor = mutableStateOf(author)
+    @PropertyNoDirectRecomposition
     val innerVersion = mutableStateOf(version)
     val innerDescription = mutableStateOf(description)
     val innerUniqueID = mutableStateOf(uniqueID)
     val innerEntryDLL = mutableStateOf(entryDLL)
+    @PropertyNoDirectRecomposition
     val innerMinimumApiVersion = mutableStateOf(minimumApiVersion)
+    @PropertyNoDirectRecomposition
     val innerMinimumGameVersion = mutableStateOf(minimumGameVersion)
     val contentPackFor = contentPackFor?.toObservable()
     val innerSchema = mutableStateOf(schema)
     // 暴露给外部的属性
     var name by innerName
     var author by innerAuthor
+    @PropertyNoDirectRecomposition
     var version by innerVersion
     var description by innerDescription
     var uniqueID by innerUniqueID
     var entryDLL by innerEntryDLL
+    @PropertyNoDirectRecomposition
     var minimumApiVersion by innerMinimumApiVersion
+    @PropertyNoDirectRecomposition
     var minimumGameVersion by innerMinimumGameVersion
     var schema by innerSchema
     val updateKeys = mutableStateListOf<ObservableModUpdateKey>().apply {

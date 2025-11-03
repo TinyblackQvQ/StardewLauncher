@@ -12,6 +12,8 @@ import kotlinx.serialization.json.encodeToStream
 import models.common.SemanticVersion
 import models.mod.serializable.Mod
 import models.mod.ModIO
+import models.mod.common.ModUUID
+import models.mod.observable.ObservableMod
 import models.mod.observable.ObservableModPack
 import models.mod.serializable.ModPack
 import org.koin.core.context.GlobalContext
@@ -152,11 +154,25 @@ object ModResourceView {
     }
 
     /**
+     * 根据唯一标识符获取所有已安装的mod版本
+     *
+     * @param uid mod的唯一标识符
+     * @return 包含所有匹配的mod版本的列表
+     */
+    fun getAllInstalledModVersionsByUniqueID(uid: String): List<ObservableMod> {
+        return installedMods.mods.filter{ it.manifest.uniqueID == uid }
+    }
+
+    fun getModInstanceByUUID(modUUID: ModUUID): ObservableMod? {
+        return installedMods.mods.firstOrNull { it.getUUID() == modUUID }
+    }
+
+    /**
      * Get all mod directories in one dir's all subdirectories
      *
      * 获取一个目录下所有是mod目录的目录
      * */
-    fun getAllModDirectories(dir: String = defaultModPath): List<File> {
+    fun getAllIsModDirFromTargetDir(dir: String = defaultModPath): List<File> {
         return File(dir)
             .walk()
             .filter { it.isDirectory() && Mod.isDirectoryAValidMod(it) }
@@ -365,7 +381,7 @@ object ModResourceView {
                 targetModPack?.let {
                     // 检查目标ModPack是否含有目标mod，如果没有，进行添加
                     if (targetModPack.getModInstanceByUUID(mod.getUUID()) == null) {
-                        targetModPack.mods.add(installedMod)
+                        targetModPack.mods.add(installedMod.toSerializable().deepCopy().toObservable())
                     }
                 }
                 AppLogger.warn(
@@ -402,6 +418,7 @@ object ModResourceView {
 
             // 更新installedMods
             installedMods.mods.add(mod.toObservable())
+            targetModPack?.mods?.add(mod.deepCopy().toObservable())
 
             // 保存到文件
             if (willSaveToFile) {
@@ -457,7 +474,7 @@ object ModResourceView {
                 )
             }
 
-            val modDirs = getAllModDirectories(path)
+            val modDirs = getAllIsModDirFromTargetDir(path)
             var processedCount = 0
             val totalSteps = modDirs.size
             // 重置进度

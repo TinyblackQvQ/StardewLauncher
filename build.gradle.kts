@@ -2,11 +2,11 @@ import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 
 plugins {
-    kotlin("jvm") version "2.0.0"
+    kotlin("jvm") version "2.2.21"
     id("io.gitlab.arturbosch.detekt") version "1.23.8"
-    id("org.jetbrains.compose") version "1.8.1"
-    id("org.jetbrains.kotlin.plugin.compose") version "2.2.0-RC2"
-    kotlin("plugin.serialization") version "2.1.21"
+    id("org.jetbrains.compose") version "1.9.2"
+    id("org.jetbrains.kotlin.plugin.compose") version "2.2.21"
+    kotlin("plugin.serialization") version "2.2.21"
 }
 
 
@@ -28,7 +28,7 @@ java {
 }
 
 group = "org.miluko"
-version = "1.0.0-pre.25615"
+version = "0.1.0-pre.251102"
 
 repositories {
     mavenCentral()
@@ -51,6 +51,7 @@ dependencies {
     implementation("com.charleskorn.kaml:kaml:0.80.1")
     implementation("net.java.dev.jna:jna:5.13.0")
     implementation("net.java.dev.jna:jna-platform:5.13.0")
+    implementation("androidx.collection:collection:1.4.5")
     val koinVersion = "4.0.3"
     implementation("io.insert-koin:koin-core:${koinVersion}")
     implementation("io.insert-koin:koin-compose:${koinVersion}")

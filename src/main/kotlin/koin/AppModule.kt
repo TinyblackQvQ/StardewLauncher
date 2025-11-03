@@ -17,6 +17,7 @@
 
 package koin
 
+import androidx.compose.material3.SnackbarHostState
 import com.russhwolf.settings.PropertiesSettings
 import com.russhwolf.settings.Settings
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -49,9 +50,12 @@ val appModule = module {
     single { NavigationManager() }
     single<IFileIO> { DesktopFileIO() }
     single<IGameDefaults> { WindowsGameDefaults() }
-    single<Json> { Json {
-        allowComments = true
-        allowTrailingComma = true
-        ignoreUnknownKeys = true
-    } }
+    single<Json> {
+        Json {
+            allowComments = true
+            allowTrailingComma = true
+            ignoreUnknownKeys = true
+        }
+    }
+    single { SnackbarHostState() }
 }

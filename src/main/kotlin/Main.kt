@@ -18,7 +18,11 @@
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -32,15 +36,15 @@ import com.mayakapps.compose.windowstyler.WindowCornerPreference
 import com.mayakapps.compose.windowstyler.WindowFrameStyle
 import com.mayakapps.compose.windowstyler.WindowStyle
 import components.AppTopBar
-import components.NavigationContainer
 import koin.appModule
-import services.navigation.NavigationDestinations
 import org.koin.compose.koinInject
 import org.koin.core.context.startKoin
 import services.config.AppConfig
 import services.config.AppProperties
 import services.logger.AppLogger
 import services.logger.LogModule
+import services.navigation.NavigationDestinations
+import services.navigation.NavigationHost
 import services.navigation.NavigationManager
 import services.resources.color.ThemeManager
 import services.resources.color.ThemeMode
@@ -65,7 +69,7 @@ fun main() {
         val navigationManager: NavigationManager = koinInject<NavigationManager>()
         val mainWindowState by windowStateManager.windowState.collectAsState()
         val localDensity = LocalDensity.current
-
+        val snackbarHostState = koinInject<SnackbarHostState>()
         /** 设置 WindowStateManager 初始化状态 */
         windowStateManager.setInitialSize(800.dp, 500.dp)
         windowStateManager.setInitialPosition(WindowInitialPosition.Center)
@@ -84,11 +88,8 @@ fun main() {
             } catch (e: Exception) {
                 AppLogger.error(LogModule.Config, "Failed to load config from local file, err: $e")
             }
-
-            // 设置标签页配置
-            navigationManager.setTabsStacks(NavigationDestinations.defaultTabsSettings)
             // 设置初始导航目标
-            navigationManager.navigateTo(NavigationDestinations.Launch)
+            navigationManager.navigateTo(NavigationDestinations.MainTabs)
         }
 
         MaterialTheme(colorScheme = colors) {
@@ -104,23 +105,27 @@ fun main() {
                     windowStateManager.setComposeWindow(window)
                     windowStateManager.setDensity(localDensity)
                 }
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize(1f)
-                ) {
-                    AppTopBar(
-                        windowState = mainWindowState,
-                        exitApp = ::exitApplication
-                    )
-                    NavigationContainer(
-                        modifier = Modifier.weight(1f).background(MaterialTheme.colorScheme.surfaceBright)
-                    )
-                }
                 WindowStyle(
                     isDarkTheme = ThemeManager.currentThemeMode.collectAsState().value == ThemeMode.DARK,
                     backdropType = WindowBackdrop.Acrylic(MaterialTheme.colorScheme.primary.copy(alpha = 0f)),
                     frameStyle = WindowFrameStyle(cornerPreference = WindowCornerPreference.ROUNDED)
                 )
+                Column(modifier = Modifier.fillMaxSize()) {
+                    AppTopBar(
+                        windowState = mainWindowState,
+                        exitApp = ::exitApplication
+                    )
+                    Scaffold(
+                        snackbarHost = {
+                            SnackbarHost(snackbarHostState)
+                        },
+                    ) { paddingValues ->
+                        NavigationHost(
+                            modifier = Modifier.background(MaterialTheme.colorScheme.surfaceBright)
+                                .padding(paddingValues)
+                        )
+                    }
+                }
             }
         }
     }

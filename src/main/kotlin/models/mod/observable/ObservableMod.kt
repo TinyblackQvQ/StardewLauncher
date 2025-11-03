@@ -2,6 +2,7 @@ package models.mod.observable
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import annotations.PropertyNoDirectRecomposition
 import kotlinx.serialization.json.JsonObject
 import models.mod.common.ModUUID
@@ -19,7 +20,7 @@ class ObservableMod(
 
     val manifest = manifest.toObservable()
     val config by innerConfig
-    val enabled by innerEnabled
+    var enabled by innerEnabled
 
     fun getUUID() = ModUUID(
         uniqueID = manifest.uniqueID,
